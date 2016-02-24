@@ -1,0 +1,19 @@
+jenkins-data:
+  build: jenkins-data
+jenkins-master:
+  build: jenkins-master
+  volumes_from:
+    - jenkins-data
+  volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock"
+    - "/usr/local/bin/docker:/bin/docker"
+  ports:
+    - "50000:50000"
+jenkins-nginx:
+  build: jenkins-nginx
+  ports:
+    - "80:80"
+  links:
+    - jenkins-master:jenkins-master
+  environment:
+    JENKINS_HOSTNAME: docker.local
